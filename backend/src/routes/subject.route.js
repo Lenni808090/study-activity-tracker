@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 router.post("/createSubject",protectRoute, createSubject);
-router.post("/deleteSubject",protectRoute, deleteSubject);
+router.post(`/deleteSubject/`,protectRoute, deleteSubject);
 router.get("/getSubjects",protectRoute, getSubjects);
 router.post("/updateStudyDuration", protectRoute, updateStudyDuration);
 

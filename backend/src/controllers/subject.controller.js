@@ -33,7 +33,7 @@ export const createSubject = async (req,res) => {
         res.status.json(200)({
             message: "Subject created successfully",
             subjects: updateUser.subjects
-        })
+        });
 
 
     }catch (error) {

@@ -32,7 +32,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("account created");
       get().connectSocket();
     } catch (error) {
-      toast.error(error.response.message);
+      toast.error(error.response.data.message);
     } finally {
       set({ isSignigUp: false });
     }
