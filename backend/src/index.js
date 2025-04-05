@@ -26,3 +26,4 @@ server.listen(PORT, () => {
 
 //routes 
 app.use("/api/auth", authRoutes);
+app.use("api/saveTime", timerRoutes);

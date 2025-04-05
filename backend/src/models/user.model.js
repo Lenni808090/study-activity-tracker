@@ -17,7 +17,16 @@ const UserSchema = new mongoose.Schema({
         minlenght: 6,
     },
 
-
+    sbjects: [{
+        name:{
+            type: String,
+            required: true
+        },
+        studyDuration:{
+            type: Number,
+            default: 0
+        },
+    }]
 
 },
     { timestamps: true }
