@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser"; // Add this import
 import { connectDB } from "./lib/db.js";
 import { app, server } from "./lib/socket.js";
 import authRoutes from "./routes/auth.route.js";
+import subjectRoutes from "./routes/subject.route.js";
 
 dotenv.config();
 
@@ -26,4 +27,4 @@ server.listen(PORT, () => {
 
 //routes 
 app.use("/api/auth", authRoutes);
-app.use("api/saveTime", timerRoutes);
+app.use("/api/subjects", subjectRoutes);

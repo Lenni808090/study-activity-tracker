@@ -1,5 +1,6 @@
 import express from "express";
 import { protectRoute } from "../middleware/auth.middleware.js"
+import {createSubject, deleteSubject, getSubjects, updateStudyDuration} from "../controllers/subject.controller.js";
 
 const router = express.Router();
 

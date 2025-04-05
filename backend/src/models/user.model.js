@@ -8,16 +8,16 @@ const UserSchema = new mongoose.Schema({
 
     email:{
         type: String,
-        requried: true,
+        required: true,
     },
 
     password:{
         type: String,
         required: true,
-        minlenght: 6,
+        minlength: 6,
     },
 
-    sbjects: [{
+    subjects: [{
         name:{
             type: String,
             required: true
