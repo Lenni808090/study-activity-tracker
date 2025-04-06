@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import { useSubjectStore } from "../store/useSubjectStore";
-import { useTimerStore } from "../store/useTimerStore";
 import { Plus, Play, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Subject = () => {
   const navigate = useNavigate();
   const [newSubjectName, setNewSubjectName] = useState("");
-  const { subjects, getSubjects, createSubject, deleteSubject} = useSubjectStore();
-  const { isRunning, stopTimer, resetTimer } = useTimerStore();
-  const [selectedSubject, setSelectedSubject] = useState(null);
+  const { subjects, getSubjects, createSubject,} = useSubjectStore();
 
   useEffect(() => {
     getSubjects();
@@ -22,16 +19,7 @@ const Subject = () => {
     setNewSubjectName("");
   };
 
-  const handleDeleteSubject = async (subjectId) => {
-    await deleteSubject({ subjectId });
-    if (selectedSubject?._id === subjectId) {
-      setSelectedSubject(null);
-      if (isRunning) {
-        stopTimer();
-        resetTimer();
-      }
-    }
-  };
+
 
  
   return (
