@@ -31,34 +31,37 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             {authUser && (
               <>
                 <Link
                   to="/homework"
-                  className="flex gap-2 items-center hover:opacity-80 transition-all"
+                  className="flex gap-2 items-center px-3 py-2 rounded-lg border border-transparent hover:border-primary/30 hover:bg-primary/10 transition-all"
                 >
-                  <BookText className="size-5" />
-                  <span className="hidden sm:inline">Hausaufgaben</span>
+                  <BookText className="size-5 text-primary" />
+                  <span className="hidden sm:inline">Homework</span>
                 </Link>
+                <div className="h-6 border-r border-base-300 mx-1"></div>
                 <Link
                   to="/timetable"
-                  className="flex gap-2 items-center hover:opacity-80 transition-all"
+                  className="flex gap-2 items-center px-3 py-2 rounded-lg border border-transparent hover:border-primary/30 hover:bg-primary/10 transition-all"
                 >
-                  <Calendar className="size-5" />
+                  <Calendar className="size-5 text-primary" />
                   <span className="hidden sm:inline">Timetable</span>
                 </Link>
+                <div className="h-6 border-r border-base-300 mx-1"></div>
                 <Link
                   to="/statistics"
-                  className="flex gap-2 items-center hover:opacity-80 transition-all"
+                  className="flex gap-2 items-center px-3 py-2 rounded-lg border border-transparent hover:border-primary/30 hover:bg-primary/10 transition-all"
                 >
-                  <BarChart3 className="size-5" />
+                  <BarChart3 className="size-5 text-primary" />
                   <span className="hidden sm:inline">Statistics</span>
                 </Link>
+                <div className="h-6 border-r border-base-300 mx-1"></div>
                 <div className="dropdown dropdown-end">
-                  <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+                  <div tabIndex={0} role="button" className="btn btn-ghost btn-circle hover:bg-primary/10">
                     <div className="indicator">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                       </svg>
                     </div>
@@ -80,8 +83,9 @@ const Navbar = () => {
                     </div>
                   </div>
                 </div>
-                <button className="flex gap-2 items-center hover:opacity-80 transition-all" onClick={logout}>
-                  <LogOut className="size-5" />
+                <div className="h-6 border-r border-base-300 mx-1"></div>
+                <button className="flex gap-2 items-center px-3 py-2 rounded-lg border border-transparent hover:border-error/30 hover:bg-error/10 transition-all" onClick={logout}>
+                  <LogOut className="size-5 text-error" />
                   <span className="hidden sm:inline">Logout</span>
                 </button>
               </>

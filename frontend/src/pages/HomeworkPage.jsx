@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useHomeworkStore } from "../store/useHomeworkStore";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Calendar, Book } from "lucide-react";
-
+import { ArrowLeft, Calendar } from "lucide-react";
+import HomeworkItem from "../components/HomeworkItem";
 
 const HomeworkPage = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const HomeworkPage = () => {
     getEveryHomework();
   }, [getEveryHomework]);
 
-  // Gruppiere Hausaufgaben nach Datum
+  // Group homework by date
   const groupedHomework = allHomework.reduce((groups, hw) => {
     const date = new Date(hw.todo).toDateString();
     if (!groups[date]) {
@@ -22,14 +22,14 @@ const HomeworkPage = () => {
     return groups;
   }, {});
 
-  // Sortiere die Daten
+  // Sort dates
   const sortedDates = Object.keys(groupedHomework).sort(
     (a, b) => new Date(a) - new Date(b)
   );
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('de-DE', {
+    return date.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -45,11 +45,11 @@ const HomeworkPage = () => {
           className="btn btn-ghost gap-2 hover:-translate-x-2 transition-transform absolute top-20 left-4"
         >
           <ArrowLeft className="h-5 w-5" />
-          Zurück
+          Back
         </button>
 
         <div className="flex flex-col items-center justify-center gap-8 pt-20 animate-fade-in">
-          <h1 className="text-4xl font-bold mb-2 animate-slide-down">Alle Hausaufgaben</h1>
+          <h1 className="text-4xl font-bold mb-2 animate-slide-down">All Homework</h1>
 
           <div className="w-full max-w-3xl">
             {sortedDates.length > 0 ? (
@@ -61,25 +61,14 @@ const HomeworkPage = () => {
                   </h2>
                   <div className="space-y-3">
                     {groupedHomework[date].map((hw) => (
-                      <div
-                        key={hw.homeworkId}
-                        className="p-4 bg-base-200 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-                      >
-                        <div className="flex items-start gap-3">
-                          <Book className="h-5 w-5 mt-1 text-primary" />
-                          <div className="flex-1">
-                            <h3 className="font-medium">{hw.text}</h3>
-                            <p className="text-sm opacity-70">Fach: {hw.subjectName}</p>
-                          </div>
-                        </div>
-                      </div>
+                      <HomeworkItem key={hw.homeworkId} homework={hw} />
                     ))}
                   </div>
                 </div>
               ))
             ) : (
               <div className="text-center p-8 bg-base-200 rounded-lg">
-                <p>Keine Hausaufgaben gefunden.</p>
+                <p>No homework found.</p>
               </div>
             )}
           </div>
