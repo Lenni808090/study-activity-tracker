@@ -7,7 +7,8 @@ import { connectDB } from "./lib/db.js";
 import { app, server } from "./lib/socket.js";
 import authRoutes from "./routes/auth.route.js";
 import subjectRoutes from "./routes/subject.route.js";
-import timetableRoutes from "./routes/timetable.route.js"
+import timetableRoutes from "./routes/timetable.route.js";
+import homeworkRoutes from "./routes/homework.route.js";
 
 dotenv.config();
 
@@ -30,3 +31,4 @@ server.listen(PORT, () => {
 app.use("/api/auth", authRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/timetable", timetableRoutes);
+app.use("api/homework", homeworkRoutes)

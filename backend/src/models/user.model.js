@@ -26,6 +26,16 @@ const UserSchema = new mongoose.Schema({
             type: Number,
             default: 0
         },
+        homework:[{
+            text:{
+                type: String,
+                required: true,
+            },
+            todo:{
+                type: Date,
+                default: Date.now
+            },
+        }],
     }],
 
     timetable: {
