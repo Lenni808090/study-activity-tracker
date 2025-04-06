@@ -12,6 +12,9 @@ import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore";
 import Timetable from "./components/Timetable";
 
+// Fügen Sie den Import für die neue Seite hinzu
+import HomeworkPage from "./pages/HomeworkPage";
+
 function App() {
   const { theme } = useThemeStore();
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -39,6 +42,8 @@ function App() {
         <Route path="/timer/:subjectId" element={authUser ? <TimerPage /> : <Navigate to="/login" />} />
         <Route path="/statistics" element={authUser ? <StatisticsPage />: <Navigate to="/login" />} /> 
         <Route path="/timetable" element={authUser ? <Timetable />: <Navigate to="/login" />} /> 
+        // Fügen Sie die neue Route hinzu (innerhalb Ihrer Routes-Komponente)
+        <Route path="/homework" element={authUser ? <HomeworkPage />: <Navigate to="/login" />} />
       </Routes>
       <Toaster
         position="top-center"

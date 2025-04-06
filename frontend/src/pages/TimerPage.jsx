@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Timer from "../components/Timer";
-import { ArrowLeft, Trash } from "lucide-react";
+import { ArrowLeft, Trash, BookOpen, Plus } from "lucide-react";
 import { useSubjectStore } from "../store/useSubjectStore";
 import { useTimerStore } from "../store/useTimerStore";
+import { useHomeworkStore } from "../store/useHomeworkStore";
 
 const TimerPage = () => {
   const { subjectId } = useParams();
   const navigate = useNavigate();
   const { subjects, getSubjects, deleteSubject } = useSubjectStore();
   const { resetTimer, stopTimer, isRunning } = useTimerStore();
+  const { addHomework, homework, getHomework } = useHomeworkStore();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [homeworkText, setHomeworkText] = useState("");
+  const [dueDate, setDueDate] = useState("");
   
   useEffect(() => {
     getSubjects();
-  }, []);
+    getHomework(subjectId);
+  }, [getSubjects, getHomework, subjectId]);
 
   const handleBack = () => {
     if (isRunning) {
@@ -31,6 +36,20 @@ const TimerPage = () => {
     resetTimer();
     await deleteSubject({ subjectId });
     navigate("/");
+  };
+
+  const handleAddHomework = async (e) => {
+    e.preventDefault();
+    if (!homeworkText.trim()) return;
+    
+    await addHomework({
+      subjectId,
+      text: homeworkText,
+      todo: dueDate || undefined
+    });
+    
+    setHomeworkText("");
+    setDueDate("");
   };
 
   const subject = subjects.find(s => s._id === subjectId);
@@ -65,6 +84,51 @@ const TimerPage = () => {
           
           <div className="w-full max-w-md transform hover:scale-[1.02] transition-transform">
             <Timer subjectId={subjectId} />
+          </div>
+          
+          {/* Homework Section */}
+          <div className="w-full max-w-md bg-base-200 p-6 rounded-lg animate-fade-in">
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <BookOpen className="h-5 w-5" />
+              Homework
+            </h2>
+            
+            <form onSubmit={handleAddHomework} className="mb-4">
+              <div className="flex flex-col gap-3">
+                <input
+                  type="text"
+                  value={homeworkText}
+                  onChange={(e) => setHomeworkText(e.target.value)}
+                  placeholder="Enter homework description"
+                  className="input input-bordered w-full"
+                />
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  className="input input-bordered w-full"
+                />
+                <button type="submit" className="btn btn-primary">
+                  <Plus className="h-5 w-5" />
+                  Add Homework
+                </button>
+              </div>
+            </form>
+            
+            <div className="flex flex-col gap-2">
+              {homework.length > 0 ? (
+                homework.map((hw) => (
+                  <div key={hw._id} className="p-3 bg-base-300 rounded-lg">
+                    <p className="font-medium">{hw.text}</p>
+                    <p className="text-sm opacity-70">
+                      Due: {new Date(hw.todo).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center opacity-70">No homework yet</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

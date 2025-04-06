@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTimerStore } from "../store/useTimerStore";
 import { useSubjectStore } from "../store/useSubjectStore";
 import { Play, Square, RotateCcw, Check } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 const formatTime = (ms) => {
   const seconds = Math.floor(ms / 1000);
@@ -15,7 +14,6 @@ const formatTime = (ms) => {
 };
 
 const Timer = ({ subjectId }) => {
-  const navigate = useNavigate();
   const { updateDurationStudied } = useSubjectStore();
   const {
     isRunning,
@@ -60,7 +58,6 @@ const Timer = ({ subjectId }) => {
       duration: elapsedTime,
     });
     resetTimer();
-    navigate('/');
 };
 
   return (

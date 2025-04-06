@@ -1,7 +1,7 @@
 import { useAuthStore } from "../store/useAuthStore.js";
 import { useThemeStore } from "../store/useThemeStore.js";
 import { Link } from "react-router-dom";
-import { LogOut, BookOpen, BarChart3, Calendar } from "lucide-react";
+import { LogOut, BookOpen, BarChart3, Calendar, BookText } from "lucide-react";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
@@ -34,6 +34,13 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             {authUser && (
               <>
+                <Link
+                  to="/homework"
+                  className="flex gap-2 items-center hover:opacity-80 transition-all"
+                >
+                  <BookText className="size-5" />
+                  <span className="hidden sm:inline">Hausaufgaben</span>
+                </Link>
                 <Link
                   to="/timetable"
                   className="flex gap-2 items-center hover:opacity-80 transition-all"
