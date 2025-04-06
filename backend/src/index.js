@@ -31,4 +31,4 @@ server.listen(PORT, () => {
 app.use("/api/auth", authRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/timetable", timetableRoutes);
-app.use("api/homework", homeworkRoutes)
+app.use("/api/homework", homeworkRoutes)
