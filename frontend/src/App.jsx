@@ -3,12 +3,14 @@ import Navbar from "./components/Navbar";
 import SignUpPage from "./pages/SignUpPage"; 
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
+import TimerPage from "./pages/TimerPage";
+import StatisticsPage from "./pages/StatisticsPage";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore";
-const App = () => {
+function App() {
   const { theme } = useThemeStore();
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
@@ -32,6 +34,8 @@ const App = () => {
         <Route path='/signup' element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
         <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
         <Route path='/' element={authUser ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/timer/:subjectId" element={authUser ? <TimerPage /> : <Navigate to="/login" />} />
+        <Route path="/statistics" element={authUser ? <StatisticsPage />: <Navigate to="/login" />} /> 
       </Routes>
       <Toaster
         position="top-center"

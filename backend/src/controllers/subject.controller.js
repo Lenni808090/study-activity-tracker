@@ -30,7 +30,7 @@ export const createSubject = async (req,res) => {
             {new: true}
         )
 
-        res.status.json(200)({
+        res.status(200).json({
             message: "Subject created successfully",
             subjects: updateUser.subjects
         });
@@ -45,43 +45,31 @@ export const createSubject = async (req,res) => {
 }
 
 export const deleteSubject = async (req,res) => {
-
-    const name = req.body.name;
+    const { subjectId } = req.body;
 
     try {
-
-        const user = await User.findById(req.user._id);
-
-        if(!user){
-            return res.status(400).json({message: "No user found"});
-        }
-
         const updatedUser = await User.findOneAndUpdate(
-            {
-                "_id": req.user._id,
-                "subjects.name": name,
-            },
+            { "_id": req.user._id },
             {
                 "$pull": {
-                    "subjects": { "name": name }
+                    "subjects": { "_id": subjectId }
                 }
             },
             { new: true }
         );
 
-        if(!updatedUser){
+        if(!updatedUser) {
             return res.status(404).json({
                 message: "User or Subject not found"
             });
         }
-
 
         res.status(200).json({
             message: "Subject deleted successfully",
             subjects: updatedUser.subjects,
         });
 
-    }catch (error) {
+    } catch (error) {
         console.error("Error in Delete Subject Controller:", error.message);
         res.status(500).json({
             message: "Internal Server Error",
@@ -114,19 +102,17 @@ export const getSubjects = async (req,res) => {
 }
 
 export const updateStudyDuration = async (req,res) => {
-    const name = req.body.name;
-    const toAddStudyDuration = req.body.studyDuration;
+    const { subjectId, duration } = req.body;
 
     try {
-
         const updatedUser = await User.findOneAndUpdate(
             {
                 "_id": req.user._id,
-                "subjects.name": name,
+                "subjects._id": subjectId,
             },
             {
                 "$inc" : {
-                    "subjects.$.studyDuration": toAddStudyDuration
+                    "subjects.$.studyDuration": parseInt(duration)
                 }
             },
             {new: true}
@@ -143,7 +129,7 @@ export const updateStudyDuration = async (req,res) => {
             subjects: updatedUser.subjects
         });
 
-    }catch (error) {
+    } catch (error) {
         console.error("Error in Update Study Duration Controller:", error.message);
         res.status(500).json({
             message: "Internal Server Error",

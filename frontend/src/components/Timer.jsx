@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useTimerStore } from "../store/useTimerStore";
-import { Play, Square, RotateCcw } from "lucide-react";
+import { useSubjectStore } from "../store/useSubjectStore";
+import { Play, Square, RotateCcw, Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const formatTime = (ms) => {
   const seconds = Math.floor(ms / 1000);
@@ -12,7 +14,9 @@ const formatTime = (ms) => {
     .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 };
 
-const Timer = () => {
+const Timer = ({ subjectId }) => {
+  const navigate = useNavigate();
+  const { updateDurationStudied } = useSubjectStore();
   const {
     isRunning,
     startTime,
@@ -47,6 +51,18 @@ const Timer = () => {
     };
   }, [isRunning, startTime, elapsedTime]);
 
+  const handleFinish = async () => {
+    if (isRunning) {
+      stopTimer();
+    }
+    await updateDurationStudied({
+      subjectId: subjectId,  // Change this to match what backend expects
+      duration: elapsedTime,
+    });
+    resetTimer();
+    navigate('/');
+};
+
   return (
     <div className="flex flex-col items-center gap-4 p-6 rounded-lg bg-base-200">
       <div className="text-4xl font-mono font-bold">{displayTime}</div>
@@ -71,6 +87,14 @@ const Timer = () => {
           Reset
         </button>
       </div>
+      <button
+        className="btn btn-success mt-4"
+        onClick={handleFinish}
+        disabled={elapsedTime === 0}
+      >
+        <Check className="h-5 w-5" />
+        Finish
+      </button>
     </div>
   );
 };
