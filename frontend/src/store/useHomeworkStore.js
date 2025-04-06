@@ -27,10 +27,10 @@ export const useHomeworkStore = create((set) => ({
 
     getEveryHomework: async () => {
         try {
-            const res = await axiosInstance.get(`/homework/getEveryHomewor k/`);
+            const res = await axiosInstance.get(`/homework/getEveryHomework`);
             set({allHomework: res.data});
         } catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "Failed to fetch homework");
         }
     },
 
