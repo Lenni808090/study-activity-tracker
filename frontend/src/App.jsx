@@ -38,7 +38,7 @@ function App() {
         <Route path='/' element={authUser ? <HomePage /> : <Navigate to="/login" />} />
         <Route path="/timer/:subjectId" element={authUser ? <TimerPage /> : <Navigate to="/login" />} />
         <Route path="/statistics" element={authUser ? <StatisticsPage />: <Navigate to="/login" />} /> 
-        <Route path="/timetable" element={<Timetable />} />
+        <Route path="/timetable" element={authUser ? <Timetable />: <Navigate to="/login" />} /> 
       </Routes>
       <Toaster
         position="top-center"

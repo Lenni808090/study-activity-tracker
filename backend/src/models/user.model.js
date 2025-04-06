@@ -26,8 +26,15 @@ const UserSchema = new mongoose.Schema({
             type: Number,
             default: 0
         },
-    }]
+    }],
 
+    timetable: {
+        monday: [String],
+        tuesday: [String],
+        wednesday: [String],
+        thursday: [String],
+        friday: [String],
+    }
 },
     { timestamps: true }
 );

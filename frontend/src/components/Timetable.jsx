@@ -1,36 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSubjectStore } from "../store/useSubjectStore";
+import { useTimetableStore } from "../store/useTimetableStore";
 import { Edit2, Save } from "lucide-react";
 
 const Timetable = () => {
-  const { subjects } = useSubjectStore();
+  const { subjects, getSubjects } = useSubjectStore();
+  const { timetable, getTimetable, saveTimetable } = useTimetableStore();
   const [isEditing, setIsEditing] = useState(false);
-  const [timetable, setTimetable] = useState({
-    monday: Array(10).fill(""),
-    tuesday: Array(10).fill(""),
-    wednesday: Array(10).fill(""),
-    thursday: Array(10).fill(""),
-    friday: Array(10).fill("")
-  });
-
   const timeSlots = [
     "08.00 - 08.45", "08.45 - 09.30", "09.45 - 10.30",
     "10.30 - 11.15", "11.30 - 12.15","12.15 - 13.00"
   ];
 
-  const handleSubjectSelect = (day, slot, subjectId) => {
+  useEffect(() => {
+    getTimetable();
+    getSubjects();
+  }, [getTimetable, getSubjects]); 
+
+
+  const handleSubjectSelect = (day, slotIndex, value) => {
     if (!isEditing) return;
-    setTimetable(prev => ({
-      ...prev,
-      [day]: prev[day].map((subject, index) => 
-        index === slot ? subjectId : subject
-      )
-    }));
+    
+    const updatedTimetable = {
+      ...timetable,
+      [day]: [...(timetable[day] || Array(timeSlots.length).fill(""))]
+    };
+    
+    updatedTimetable[day][slotIndex] = value;
+    
+    console.log("Sending to backend:", updatedTimetable);
+    saveTimetable({ timetable: updatedTimetable });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsEditing(false);
-    // Here you would add logic to save to backend
   };
 
   return (
@@ -79,6 +82,8 @@ const Timetable = () => {
                           className="select select-bordered w-full"
                           value={timetable[day][slotIndex]}
                           onChange={(e) => handleSubjectSelect(day, slotIndex, e.target.value)}
+                          name={`subject-${day}-${slotIndex}`}
+                          id={`subject-${day}-${slotIndex}`}
                         >
                           <option value="">Select subject</option>
                           {subjects.map(subject => (
