@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore";
+import Timetable from "./components/Timetable";
+
 function App() {
   const { theme } = useThemeStore();
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -36,6 +38,7 @@ function App() {
         <Route path='/' element={authUser ? <HomePage /> : <Navigate to="/login" />} />
         <Route path="/timer/:subjectId" element={authUser ? <TimerPage /> : <Navigate to="/login" />} />
         <Route path="/statistics" element={authUser ? <StatisticsPage />: <Navigate to="/login" />} /> 
+        <Route path="/timetable" element={<Timetable />} />
       </Routes>
       <Toaster
         position="top-center"
