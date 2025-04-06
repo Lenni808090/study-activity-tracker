@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useSubjectStore } from "../store/useSubjectStore";
-import { Plus, Play, Trash } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
+import SubjectItem from "./SubjectItem";
 
 const Subject = () => {
-  const navigate = useNavigate();
   const [newSubjectName, setNewSubjectName] = useState("");
-  const { subjects, getSubjects, createSubject,} = useSubjectStore();
+  const { subjects, getSubjects, createSubject } = useSubjectStore();
 
   useEffect(() => {
     getSubjects();
@@ -19,9 +18,6 @@ const Subject = () => {
     setNewSubjectName("");
   };
 
-
-
- 
   return (
     <div className="flex flex-col gap-6 w-full max-w-md">
       <form onSubmit={handleCreateSubject} className="flex gap-2">
@@ -40,20 +36,7 @@ const Subject = () => {
 
       <div className="flex flex-col gap-3">
         {subjects.map((subject) => (
-          <div
-            key={subject._id}
-            onClick={() => navigate(`/timer/${subject._id}`)}
-            className="flex items-center justify-between p-4 rounded-lg bg-base-200 cursor-pointer hover:bg-base-300"
-          >
-            <div className="flex flex-col">
-              <span className="font-semibold">{subject.name}</span>
-              <span className="text-sm opacity-70">
-                Study time: {Math.floor(subject.studyDuration / (60 * 60 * 1000))}h{" "}
-                {Math.floor((subject.studyDuration / (60 * 1000)) % 60)}m{" "}
-                {Math.floor((subject.studyDuration / 1000) % 60)}s
-              </span>
-            </div>
-          </div>
+          <SubjectItem key={subject._id} subject={subject} />
         ))}
       </div>
     </div>

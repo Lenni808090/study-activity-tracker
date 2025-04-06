@@ -53,7 +53,21 @@ export const getHomework = async (req, res) => {
             subject => subject._id.toString() === subjectId
         );
 
-        res.status(200).json(selectedSubject ? selectedSubject.homework : []);
+        const resHomework = [];
+
+        if (selectedSubject && selectedSubject.homework) {
+            selectedSubject.homework.forEach(hw => {
+                resHomework.push({
+                    subjectId: selectedSubject._id,
+                    subjectName: selectedSubject.name,
+                    homeworkId: hw._id,
+                    text: hw.text,
+                    todo: hw.todo
+                });
+            });
+        }
+
+        res.status(200).json(resHomework);
     } catch (error) {
         console.error("Error in Get Homework Controller:", error.message);
         res.status(500).json({
@@ -95,4 +109,38 @@ export const getEveryHomework = async (req, res) => {
             message: "Internal Server Error"
         });
     }
+}
+
+
+export const completeHomework = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const {homeworkId, subjectId} = req.body;
+
+        const updatedUser = await User.findOneAndUpdate(
+            {
+                "_id": userId,
+                "subjects._id": subjectId
+            },
+            {
+                "$pull": {
+                    "subjects.$.homework": {_id: homeworkId}
+                }
+            },
+            {new: true}
+        );
+
+        const selectedSubject = updatedUser.subjects.find(
+            subject => subject._id.toString() === subjectId
+        );
+
+        res.status(200).json(selectedSubject.homework);
+        
+    } catch (error) {
+        console.error("Error in complete Homework Controller:", error.message);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+    }
+
 }

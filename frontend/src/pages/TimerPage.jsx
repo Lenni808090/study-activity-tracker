@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSubjectStore } from "../store/useSubjectStore";
-import { ArrowLeft, Plus, Calendar, X } from "lucide-react";
+import { ArrowLeft, Plus, X } from "lucide-react";
 import Timer from "../components/Timer";
 import { useHomeworkStore } from "../store/useHomeworkStore";
+import HomeworkItem from "../components/subjectHomeworkItem";
 
 const TimerPage = () => {
   const { subjectId } = useParams();
@@ -37,6 +38,9 @@ const TimerPage = () => {
       subjectId,
       text: homeworkText,
       todo: new Date(dueDate).toISOString(),
+    }).then(() => {
+      // Refresh the homework list after adding
+      getHomework(subjectId);
     });
     
     setHomeworkText("");
@@ -125,17 +129,7 @@ const TimerPage = () => {
                 <h3 className="font-medium text-lg">Current Homework</h3>
                 {homework.length > 0 ? (
                   homework.map((hw) => (
-                    <div key={hw.homeworkId} className="p-3 bg-base-100 rounded-lg">
-                      <div className="flex items-start gap-2">
-                        <Calendar className="h-5 w-5 mt-1 text-primary" />
-                        <div>
-                          <p className="font-medium">{hw.text}</p>
-                          <p className="text-sm opacity-70">
-                            Due: {new Date(hw.todo).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                    <HomeworkItem key={hw.homeworkId} homework={hw} />
                   ))
                 ) : (
                   <p className="text-center opacity-70">No homework yet</p>
