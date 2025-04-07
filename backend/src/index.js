@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.route.js";
 import subjectRoutes from "./routes/subject.route.js";
 import timetableRoutes from "./routes/timetable.route.js";
 import homeworkRoutes from "./routes/homework.route.js";
+import friendRequestRoutes from "./routes/friendrequest.route.js";
 
 dotenv.config();
 
@@ -32,3 +33,4 @@ app.use("/api/auth", authRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/timetable", timetableRoutes);
 app.use("/api/homework", homeworkRoutes)
+app.use("/api/friend-requests", friendRequestRoutes);

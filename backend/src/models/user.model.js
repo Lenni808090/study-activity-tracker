@@ -38,6 +38,13 @@ const UserSchema = new mongoose.Schema({
         }],
     }],
 
+    friends: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+    ],
+
     timetable: {
         monday: [String],
         tuesday: [String],
