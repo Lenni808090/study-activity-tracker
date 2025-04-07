@@ -4,7 +4,7 @@ import { useHomeworkStore } from "../store/useHomeworkStore";
 
 const HomeworkItem = ({ homework }) => {
   const navigate = useNavigate();
-  const { completeHomework } = useHomeworkStore();
+  const { completeHomework, getEveryHomework } = useHomeworkStore();
   
   // Add this to debug
   console.log("Homework in HomeworkItem:", homework);
@@ -18,6 +18,8 @@ const HomeworkItem = ({ homework }) => {
     completeHomework({ 
       homeworkId: homework.homeworkId,
       subjectId: homework.subjectId 
+    }).then(() => {
+      getEveryHomework()
     });
   };
 
