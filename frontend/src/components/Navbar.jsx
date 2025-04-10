@@ -1,7 +1,7 @@
 import { useAuthStore } from "../store/useAuthStore.js";
 import { useThemeStore } from "../store/useThemeStore.js";
 import { Link } from "react-router-dom";
-import { LogOut, BookOpen, BarChart3, Calendar, BookText } from "lucide-react";
+import { LogOut, BookOpen, BarChart3, Calendar, BookText, Users } from "lucide-react";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
@@ -56,6 +56,14 @@ const Navbar = () => {
                 >
                   <BarChart3 className="size-5 text-primary" />
                   <span className="hidden sm:inline">Statistics</span>
+                </Link>
+                <div className="h-6 border-r border-base-300 mx-1"></div>
+                <Link
+                  to="/friends"
+                  className="flex gap-2 items-center px-3 py-2 rounded-lg border border-transparent hover:border-primary/30 hover:bg-primary/10 transition-all"
+                >
+                  <Users className="size-5 text-primary" />
+                  <span className="hidden sm:inline">Friends</span>
                 </Link>
                 <div className="h-6 border-r border-base-300 mx-1"></div>
                 <div className="dropdown dropdown-end">

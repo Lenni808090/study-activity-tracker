@@ -49,17 +49,17 @@ export const acceptFriendRequest = async (req, res) => {
   const receiverId = req.user._id;
 
   try {
-    const updatedRequest = await FriendRequest.updateOne(
+    const updatedRequest = await FriendRequest.findOneAndUpdate(
       { senderId: senderId, receiverId: receiverId, status: "pending" },
       { status: "accepted" },
       { new: true }
-    );
+    ).populate("senderId", "fullName");
 
     if (!updatedRequest) {
-      res.status(404).json({ message: "Friend Request not Found" });
+      return res.status(404).json({ message: "Friend Request not Found" });
     }
 
-    //add Users to Friends
+    // Add Users to Friends
     await User.findByIdAndUpdate(senderId, {
       $addToSet: { friends: receiverId },
     });
@@ -101,11 +101,11 @@ export const getFriendRequests = async (req, res) => {
     const friendRequests = await FriendRequest.find({
       receiverId: myId,
       status: "pending",
-    }).populate("senderId", "fullName");
+    }).populate("senderId", "fullName email");  // Added email field to population
 
     res.status(200).json(friendRequests);
   } catch (error) {
-    console.log("Error in  getFriendRequest controller: ", error.message);
+    console.log("Error in getFriendRequest controller: ", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -116,7 +116,10 @@ export const getSentFriendRequests = async (req, res) => {
     const friendRequests = await FriendRequest.find({
       senderId: myId,
       status: "pending",
-    }).populate("receiverId", "fullName");
+    }).populate({        
+      path: 'receiverId',
+      select: 'fullName email' 
+    });
 
     res.status(200).json(friendRequests);
   } catch (error) {
@@ -145,6 +148,28 @@ export const getAddableUsers = async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     console.log("Error in searchUsers controller: ", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+export const getFriends = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    
+    const user = await User.findById(userId)
+      .populate({
+        path: 'friends',
+        select: 'fullName email' // Wählen Sie die Felder aus, die Sie benötigen
+      });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user.friends);
+  } catch (error) {
+    console.log("Error in friends controller: ", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
