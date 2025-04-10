@@ -37,7 +37,7 @@ export const useSubjectStore = create((set) => ({
         }
     },
 
-    deleteSubject: async (data) => {
+    deleteSubjects: async (data) => {
         try {
             const res = await axiosInstance.post("/subjects/deleteSubject", data);
             set({ subjects: res.data.subjects });
