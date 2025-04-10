@@ -100,10 +100,16 @@ export default function FriendsPage() {
             </h2>
             {filteredUsers(friends).length === 0 ? (
               <div className="text-center p-8 bg-base-200 rounded-lg shadow-inner animate-pulse">
-                <p className="text-gray-500">You don't have any friends yet.</p>
+                <p className="text-gray-500">
+                  {friends.length === 0
+                    ? "You don't have any friends yet."
+                    : `No friends found matching '${searchTerm}'`
+                  }
+                </p>
                 <button 
                   className="btn btn-primary btn-sm mt-4"
                   onClick={() => setActiveTab('add')}
+                  style={{ display: friends.length === 0 ? 'inline-flex' : 'none' }}
                 >
                   Find Friends
                 </button>
