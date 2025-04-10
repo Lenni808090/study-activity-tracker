@@ -40,19 +40,19 @@ const Timetable = () => {
     <div className="min-h-[calc(100vh-64px)] bg-gradient-to-br from-base-100 to-base-300 pt-16">
       <div className="container mx-auto px-4 pt-10">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">Timetable</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">Timetable</h1>
           <button 
             onClick={isEditing ? handleSave : () => setIsEditing(true)} 
-            className={`btn gap-2 ${isEditing ? 'btn-success' : 'btn-primary'}`}
+            className={`btn gap-2 text-lg ${isEditing ? 'btn-success' : 'btn-primary'}`}
           >
             {isEditing ? (
               <>
-                <Save className="h-5 w-5" />
+                <Save className="h-6 w-6" />
                 Save
               </>
             ) : (
               <>
-                <Edit2 className="h-5 w-5" />
+                <Edit2 className="h-6 w-6" />
                 Edit
               </>
             )}
@@ -60,26 +60,26 @@ const Timetable = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="table table-zebra w-full">
+          <table className="table table-zebra w-full text-base md:text-lg [&_td]:border-x [&_td]:border-base-300 [&_th]:border-x [&_th]:border-base-300">
             <thead>
-              <tr>
-                <th>Time</th>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
+              <tr className="border-b-2 border-base-300">
+                <th className="text-base md:text-lg lg:text-xl bg-base-200">Time</th>
+                <th className="text-base md:text-lg lg:text-xl bg-base-200">Monday</th>
+                <th className="text-base md:text-lg lg:text-xl bg-base-200">Tuesday</th>
+                <th className="text-base md:text-lg lg:text-xl bg-base-200">Wednesday</th>
+                <th className="text-base md:text-lg lg:text-xl bg-base-200">Thursday</th>
+                <th className="text-base md:text-lg lg:text-xl bg-base-200">Friday</th>
               </tr>
             </thead>
             <tbody>
               {timeSlots.map((time, slotIndex) => (
-                <tr key={time}>
-                  <td className="font-semibold">{time}</td>
+                <tr key={time} className="border-b border-base-300">
+                  <td className="font-semibold text-base md:text-lg bg-base-200">{time}</td>
                   {Object.keys(timetable).map(day => (
-                    <td key={`${day}-${slotIndex}`}>
+                    <td key={`${day}-${slotIndex}`} className="border-x border-base-300">
                       {isEditing ? (
                         <select
-                          className="select select-bordered w-full"
+                          className="select select-bordered w-full text-base md:text-lg"
                           value={timetable[day][slotIndex]}
                           onChange={(e) => handleSubjectSelect(day, slotIndex, e.target.value)}
                           name={`subject-${day}-${slotIndex}`}
@@ -93,7 +93,7 @@ const Timetable = () => {
                           ))}
                         </select>
                       ) : (
-                        <span className="block p-2">
+                        <span className="block p-2 text-base md:text-lg">
                           {subjects.find(s => s._id === timetable[day][slotIndex])?.name || '-'}
                         </span>
                       )}
