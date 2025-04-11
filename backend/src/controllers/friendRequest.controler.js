@@ -133,6 +133,8 @@ export const getAddableUsers = async (req, res) => {
     const searchTerm = req.query.search || "";
     const userId = req.user._id;
 
+    const currentUser = await User.findById(userId)
+
     const users = await User.find({
       $and: [
         {
@@ -141,7 +143,8 @@ export const getAddableUsers = async (req, res) => {
             { email: { $regex: searchTerm, $options: "i" } }
           ]
         },
-        { _id: { $ne: userId } } // Exclude current user
+        { _id: { $ne: userId } },
+        { _id: { $nin: currentUser.friends } }
       ]
     }).select("-password");
 

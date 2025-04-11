@@ -49,9 +49,10 @@ export const useFriendStore = create((set) => ({
 
   acceptFriendRequest: async (requestId) => {
     try {
-      await axiosInstance.post(`/friend-requests/accept/${requestId}`);
+      const senderId = requestId; // Assuming the requestId contains the senderId
+      await axiosInstance.post(`/friend-requests/accept/${senderId}`)
       toast.success("Friend request accepted");
-      // Refresh both friend requests and friends list
+      // Refresh bothf riend requests and friends list
       const [requestsRes, friendsRes] = await Promise.all([
         axiosInstance.get("/friend-requests/"),
         axiosInstance.get("/friend-requests/friends")

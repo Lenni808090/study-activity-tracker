@@ -123,11 +123,6 @@ export default function FriendsPage() {
                   >
                     <div className="card-body">
                       <div className="flex items-center gap-4">
-                        <div className="avatar placeholder">
-                          <div className="bg-neutral text-neutral-content rounded-full w-12">
-                            <span className="text-xl">{friend.fullName[0]}</span>
-                          </div>
-                        </div>
                         <div>
                           <h3 className="card-title">{friend.fullName}</h3>
                           <p className="text-sm opacity-70">{friend.email}</p>
@@ -152,19 +147,34 @@ export default function FriendsPage() {
                 {friendRequests.map((request) => (
                   <div key={request._id} className="card bg-base-200 shadow-md">
                     <div className="card-body">
-                      <h3 className="card-title">{request.sender.fullName}</h3>
-                      <p>{request.sender.email}</p>
+                      <h3 className="card-title">{request.senderId?.fullName}</h3>
+                      <p>{request.senderId?.email}</p>
                       <div className="card-actions justify-end mt-2">
                         <button 
                           className="btn btn-sm btn-success"
-                          onClick={() => acceptFriendRequest(request._id)}
+                          onClick={() => {
+                            acceptFriendRequest(request.senderId._id)  // Changed from request._id to request.senderId._id
+                              .then(() => {
+                                // Refresh all relevant data after accepting
+                                getFriendRequests();
+                                getFriends();
+                                getAddableUsers();
+                              });
+                          }}
                         >
                           <UserCheck size={16} />
                           Accept
                         </button>
                         <button 
                           className="btn btn-sm btn-error"
-                          onClick={() => rejectFriendRequest(request._id)}
+                          onClick={() => {
+                            rejectFriendRequest(request._id)
+                              .then(() => {
+                                // Refresh requests after rejecting
+                                getFriendRequests();
+                                getAddableUsers();
+                              });
+                          }}
                         >
                           <UserX size={16} />
                           Reject
