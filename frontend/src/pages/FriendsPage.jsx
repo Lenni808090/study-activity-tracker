@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFriendStore } from "../store/useFriendStore";
 import { UserPlus, UserCheck, UserX, Users, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function FriendsPage() {
   const {
@@ -14,11 +15,12 @@ export default function FriendsPage() {
     sendFriendRequest,
     acceptFriendRequest,
     rejectFriendRequest,
-    getFriends
+    getFriends,
   } = useFriendStore();
 
   const [activeTab, setActiveTab] = useState("friends");
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     getFriendRequests();
@@ -28,9 +30,10 @@ export default function FriendsPage() {
   }, [getFriendRequests, getSentRequests, getAddableUsers, getFriends]);
 
   const filteredUsers = (users) => {
-    return users.filter(user => 
-      user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+    return users.filter(
+      (user) =>
+        user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
 
@@ -39,39 +42,41 @@ export default function FriendsPage() {
       <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
         Friends & Connections
       </h1>
-      
+
       <div className="tabs tabs-boxed mb-6 p-2 gap-2">
-        <button 
+        <button
           className={`tab gap-2 transition-all duration-300 transform hover:scale-105
-            ${activeTab === 'friends' ? 'tab-active scale-105' : ''}`}
-          onClick={() => setActiveTab('friends')}
+            ${activeTab === "friends" ? "tab-active scale-105" : ""}`}
+          onClick={() => setActiveTab("friends")}
         >
           <Users className="mr-2" size={18} />
           My Friends
         </button>
-        <button 
+        <button
           className={`tab gap-2 transition-all duration-300 transform hover:scale-105
-            ${activeTab === 'requests' ? 'tab-active scale-105' : ''}`}
-          onClick={() => setActiveTab('requests')}
+            ${activeTab === "requests" ? "tab-active scale-105" : ""}`}
+          onClick={() => setActiveTab("requests")}
         >
           <UserCheck className="mr-2" size={18} />
           Friend Requests
           {friendRequests.length > 0 && (
-            <span className="badge badge-primary badge-sm">{friendRequests.length}</span>
+            <span className="badge badge-primary badge-sm">
+              {friendRequests.length}
+            </span>
           )}
         </button>
-        <button 
+        <button
           className={`tab gap-2 transition-all duration-300 transform hover:scale-105
-            ${activeTab === 'sent' ? 'tab-active scale-105' : ''}`}
-          onClick={() => setActiveTab('sent')}
+            ${activeTab === "sent" ? "tab-active scale-105" : ""}`}
+          onClick={() => setActiveTab("sent")}
         >
           <UserPlus className="mr-2" size={18} />
           Sent Requests
         </button>
-        <button 
+        <button
           className={`tab gap-2 transition-all duration-300 transform hover:scale-105
-            ${activeTab === 'add' ? 'tab-active scale-105' : ''}`}
-          onClick={() => setActiveTab('add')}
+            ${activeTab === "add" ? "tab-active scale-105" : ""}`}
+          onClick={() => setActiveTab("add")}
         >
           <UserPlus className="mr-2" size={18} />
           Add Friends
@@ -92,7 +97,7 @@ export default function FriendsPage() {
       </div>
 
       <div className="transition-all duration-300 ease-in-out">
-        {activeTab === 'friends' && (
+        {activeTab === "friends" && (
           <div className="animate-slide-down">
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <Users className="text-primary" />
@@ -103,13 +108,14 @@ export default function FriendsPage() {
                 <p className="text-gray-500">
                   {friends.length === 0
                     ? "You don't have any friends yet."
-                    : `No friends found matching '${searchTerm}'`
-                  }
+                    : `No friends found matching '${searchTerm}'`}
                 </p>
-                <button 
+                <button
                   className="btn btn-primary btn-sm mt-4"
-                  onClick={() => setActiveTab('add')}
-                  style={{ display: friends.length === 0 ? 'inline-flex' : 'none' }}
+                  onClick={() => setActiveTab("add")}
+                  style={{
+                    display: friends.length === 0 ? "inline-flex" : "none",
+                  }}
                 >
                   Find Friends
                 </button>
@@ -117,9 +123,10 @@ export default function FriendsPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredUsers(friends).map((friend) => (
-                  <div 
-                    key={friend._id} 
-                    className="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  <div
+                    key={friend._id}
+                    onClick={() => navigate(`/statistics/${friend._id}`)}
+                    className="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
                   >
                     <div className="card-body">
                       <div className="flex items-center gap-4">
@@ -137,23 +144,27 @@ export default function FriendsPage() {
         )}
 
         {/* Similar pattern for other tabs... */}
-        {activeTab === 'requests' && (
+        {activeTab === "requests" && (
           <div className="animate-slide-down">
             <h2 className="text-xl font-semibold mb-4">Friend Requests</h2>
             {friendRequests.length === 0 ? (
-              <p className="text-gray-500">You don't have any friend requests.</p>
+              <p className="text-gray-500">
+                You don't have any friend requests.
+              </p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {friendRequests.map((request) => (
                   <div key={request._id} className="card bg-base-200 shadow-md">
                     <div className="card-body">
-                      <h3 className="card-title">{request.senderId?.fullName}</h3>
+                      <h3 className="card-title">
+                        {request.senderId?.fullName}
+                      </h3>
                       <p>{request.senderId?.email}</p>
                       <div className="card-actions justify-end mt-2">
-                        <button 
+                        <button
                           className="btn btn-sm btn-success"
                           onClick={() => {
-                            acceptFriendRequest(request.senderId._id)  // Changed from request._id to request.senderId._id
+                            acceptFriendRequest(request.senderId._id) // Changed from request._id to request.senderId._id
                               .then(() => {
                                 // Refresh all relevant data after accepting
                                 getFriendRequests();
@@ -165,15 +176,14 @@ export default function FriendsPage() {
                           <UserCheck size={16} />
                           Accept
                         </button>
-                        <button 
+                        <button
                           className="btn btn-sm btn-error"
                           onClick={() => {
-                            rejectFriendRequest(request._id)
-                              .then(() => {
-                                // Refresh requests after rejecting
-                                getFriendRequests();
-                                getAddableUsers();
-                              });
+                            rejectFriendRequest(request._id).then(() => {
+                              // Refresh requests after rejecting
+                              getFriendRequests();
+                              getAddableUsers();
+                            });
                           }}
                         >
                           <UserX size={16} />
@@ -188,17 +198,21 @@ export default function FriendsPage() {
           </div>
         )}
 
-        {activeTab === 'sent' && (
+        {activeTab === "sent" && (
           <div className="animate-slide-down">
             <h2 className="text-xl font-semibold mb-4">Sent Requests</h2>
             {sentRequests.length === 0 ? (
-              <p className="text-gray-500">You haven't sent any friend requests.</p>
+              <p className="text-gray-500">
+                You haven't sent any friend requests.
+              </p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {sentRequests.map((request) => (
                   <div key={request._id} className="card bg-base-200 shadow-md">
                     <div className="card-body">
-                      <h3 className="card-title">{request.receiverId.fullName}</h3>
+                      <h3 className="card-title">
+                        {request.receiverId.fullName}
+                      </h3>
                       <p>{request.receiverId.email}</p>
                       <p className="text-sm text-gray-500 mt-2">
                         Status: {request.status}
@@ -211,11 +225,13 @@ export default function FriendsPage() {
           </div>
         )}
 
-        {activeTab === 'add' && (
+        {activeTab === "add" && (
           <div className="animate-slide-down">
             <h2 className="text-xl font-semibold mb-4">Add Friends</h2>
             {addableUsers.length === 0 ? (
-              <p className="text-gray-500">No users available to add as friends.</p>
+              <p className="text-gray-500">
+                No users available to add as friends.
+              </p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {addableUsers.map((user) => (
@@ -224,7 +240,7 @@ export default function FriendsPage() {
                       <h3 className="card-title">{user.fullName}</h3>
                       <p>{user.email}</p>
                       <div className="card-actions justify-end mt-2">
-                        <button 
+                        <button
                           className="btn btn-sm btn-primary"
                           onClick={() => sendFriendRequest(user._id)}
                         >

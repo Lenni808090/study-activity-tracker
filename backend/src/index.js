@@ -10,6 +10,7 @@ import subjectRoutes from "./routes/subject.route.js";
 import timetableRoutes from "./routes/timetable.route.js";
 import homeworkRoutes from "./routes/homework.route.js";
 import friendRequestRoutes from "./routes/friendrequest.route.js";
+import socialRoutes from "./routes/social.route.js";
 
 dotenv.config();
 
@@ -34,3 +35,4 @@ app.use("/api/subjects", subjectRoutes);
 app.use("/api/timetable", timetableRoutes);
 app.use("/api/homework", homeworkRoutes)
 app.use("/api/friend-requests", friendRequestRoutes);
+app.use("/api/social", socialRoutes);

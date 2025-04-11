@@ -4,6 +4,7 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -16,12 +17,17 @@ const formatTime = (ms) => {
 };
 
 const StatisticsPage = () => {
+  const { userId } = useParams();
   const navigate = useNavigate();
-  const { subjects, getSubjects } = useSubjectStore();
+  const { subjects, getSubjects, getSubjectsOfUser } = useSubjectStore();
 
   useEffect(() => {
-    getSubjects();
-  }, [getSubjects]);
+    if (userId) {
+      getSubjectsOfUser(userId);
+    } else {
+      getSubjects(); 
+    }
+  }, [userId, getSubjects, getSubjectsOfUser]);
 
   const totalTime = subjects.reduce((acc, subject) => acc + subject.studyDuration, 0);
 
