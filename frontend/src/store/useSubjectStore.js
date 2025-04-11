@@ -16,6 +16,16 @@ export const useSubjectStore = create((set) => ({
         }
     },
 
+    getSubjectsOfUser: async (userId) => {
+        try {
+            const res = await axiosInstance.get(`/social/subjects/${userId}`);
+            set({ subjects: res.data.subjects }); // gleiche Variable!
+            toast.success(res.data.message);
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    },
+
     updateDurationStudied: async (data) => {
         try {
             // Route-Name anpassen
