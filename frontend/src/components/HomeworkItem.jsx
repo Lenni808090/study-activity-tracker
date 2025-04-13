@@ -6,9 +6,7 @@ const HomeworkItem = ({ homework }) => {
   const navigate = useNavigate();
   const { completeHomework, getEveryHomework } = useHomeworkStore();
   
-  // Add this to debug
-  console.log("Homework in HomeworkItem:", homework);
-
+  // Remove debug console.log
   const navigateToSubjectTimer = () => {
     navigate(`/timer/${homework.subjectId}`);
   };

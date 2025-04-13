@@ -1,123 +1,130 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useGradeStore } from "../store/useGradeStore";
-import { Plus, X, BookOpen } from "lucide-react";
+import { Plus } from "lucide-react";
 
 const GradeSection = ({ subjectId }) => {
-  const { grades, getGrades, saveWrittenGrade, saveSpokenGrade } = useGradeStore();
   const [showForm, setShowForm] = useState(false);
   const [gradeType, setGradeType] = useState("written");
   const [gradeValue, setGradeValue] = useState("");
-  // Remove gradeDescription state
+  const { grades, saveWrittenGrade, saveSpokenGrade } = useGradeStore();
 
-  useEffect(() => {
-    if (subjectId) {
-      getGrades(subjectId);
-    }
-  }, [subjectId, getGrades]);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const gradeData = {
+    const data = {
       subjectId,
-      grade: parseFloat(gradeValue)
+      grade: parseFloat(gradeValue),
     };
 
     if (gradeType === "written") {
-      saveWrittenGrade(gradeData);
+      await saveWrittenGrade(data);
     } else {
-      saveSpokenGrade(gradeData);
+      await saveSpokenGrade(data);
     }
 
-    // Reset form
     setGradeValue("");
     setShowForm(false);
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
+  // Calculate averages
+  const writtenGrades = grades.filter((g) => g.type === "written");
+  const spokenGrades = grades.filter((g) => g.type === "spoken");
+
+  const calculateAverage = (grades, isWritten = false) => {
+    if (grades.length === 0) return "N/A";
+    const sum = grades.reduce((acc, grade) => acc + grade.value, 0);
+    return ((sum * (isWritten ? 2 : 1)) / (grades.length * (isWritten ? 2 : 1))).toFixed(2);
   };
 
+  const writtenAverage = calculateAverage(writtenGrades, true);
+  const spokenAverage = calculateAverage(spokenGrades);
+  
+  const totalAverage = grades.length > 0
+    ? (((writtenGrades.reduce((acc, g) => acc + g.value, 0) * 2) + 
+        spokenGrades.reduce((acc, g) => acc + g.value, 0)) / 
+        ((writtenGrades.length * 2) + spokenGrades.length)).toFixed(2)
+    : "N/A";
+
   return (
-    <div className="flex flex-col gap-6 p-6 bg-base-200 rounded-xl shadow-md relative">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Grades</h2>
-        <button 
-          onClick={() => setShowForm(!showForm)} 
+    <div className="bg-base-200 p-6 rounded-xl shadow-md">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold">Grades</h2>
+        <button
+          onClick={() => setShowForm(!showForm)}
           className={`btn btn-circle btn-primary ${showForm ? 'rotate-45' : ''} transition-transform duration-300`}
         >
-          {showForm ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+          <Plus className="h-5 w-5" />
         </button>
       </div>
-      
-      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showForm ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 pt-2">
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Grade Type</span>
-            </label>
-            <select 
-              className="select select-bordered w-full"
+
+      {/* Averages Display */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="bg-base-100 p-4 rounded-lg">
+          <h3 className="text-sm opacity-70 mb-1">Written Average</h3>
+          <p className="text-2xl font-bold">{writtenAverage}</p>
+        </div>
+        <div className="bg-base-100 p-4 rounded-lg">
+          <h3 className="text-sm opacity-70 mb-1">Spoken Average</h3>
+          <p className="text-2xl font-bold">{spokenAverage}</p>
+        </div>
+        <div className="bg-base-100 p-4 rounded-lg">
+          <h3 className="text-sm opacity-70 mb-1">Total Average</h3>
+          <p className="text-2xl font-bold">{totalAverage}</p>
+        </div>
+      </div>
+
+      {showForm && (
+        <form onSubmit={handleSubmit} className="mb-6">
+          <div className="flex gap-4">
+            <select
               value={gradeType}
               onChange={(e) => setGradeType(e.target.value)}
-              required
+              className="select select-bordered flex-1"
             >
               <option value="written">Written</option>
               <option value="spoken">Spoken</option>
             </select>
-          </div>
-          
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Grade</span>
-            </label>
             <input
               type="number"
-              min="1"
-              max="6"
-              step="0.1"
               value={gradeValue}
               onChange={(e) => setGradeValue(e.target.value)}
               placeholder="Enter grade (1-6)"
-              className="input input-bordered w-full"
+              className="input input-bordered flex-1"
+              min="1"
+              max="6"
+              step="0.1"
               required
             />
+            <button type="submit" className="btn btn-primary">
+              Save
+            </button>
           </div>
-          
-          <button type="submit" className="btn btn-primary mt-2">
-            Add Grade
-          </button>
         </form>
-        <div className="divider"></div>
-      </div>
-      
-      <div className="flex flex-col gap-3 overflow-y-auto max-h-60">
-        <h3 className="font-medium text-lg">Your Grades</h3>
-        {grades && grades.length > 0 ? (
-          <div className="space-y-3">
-            {grades.map((grade, index) => (
-              <div key={index} className="p-4 bg-base-100 rounded-lg shadow-md border border-primary/20">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <BookOpen className="h-5 w-5 text-primary" />
-                    <p className="text-sm opacity-70">
-                      {grade.type === 'written' ? 'Written' : 'Spoken'} • {formatDate(grade.date)}
-                    </p>
-                  </div>
-                  <span className={`badge text-lg font-bold ${parseFloat(grade.value) >= 5 ? 'badge-error' : parseFloat(grade.value) >= 3.5 ? 'badge-warning' : 'badge-success'}`}>
-                    {grade.value}
-                  </span>
-                </div>
+      )}
+
+      <div className="space-y-3">
+        {grades.length > 0 ? (
+          grades.map((grade, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-center p-3 bg-base-100 rounded-lg"
+            >
+              <div>
+                <span className="font-medium">
+                  {grade.value.toFixed(1)}
+                </span>
+                <span className="ml-2 opacity-70 text-sm">
+                  ({grade.type})
+                </span>
               </div>
-            ))}
-          </div>
+              <span className="text-sm opacity-70">
+                {new Date(grade.date).toLocaleDateString()}
+              </span>
+            </div>
+          ))
         ) : (
-          <p className="text-center opacity-70">No grades yet</p>
+          <p className="text-center p-4 bg-base-100 rounded-lg opacity-70">
+            No grades yet. Add your first grade!
+          </p>
         )}
       </div>
     </div>

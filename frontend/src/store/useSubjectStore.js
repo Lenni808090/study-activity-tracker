@@ -32,7 +32,6 @@ export const useSubjectStore = create((set) => ({
 
     updateDurationStudied: async (data) => {
         try {
-            // Route-Name anpassen
             const res = await axiosInstance.post("/subjects/updateStudyDuration", data);
             set({ subjects: res.data.subjects });
             toast.success(res.data.message);
