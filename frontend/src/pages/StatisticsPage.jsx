@@ -19,7 +19,7 @@ const formatTime = (ms) => {
 const StatisticsPage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const { subjects, loadingSubjects, getSubjects, getSubjectsOfUser } = useSubjectStore();
+  const { subjects, loadingSubjects, getSubjects, getSubjectsOfUser, name } = useSubjectStore();
 
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const StatisticsPage = () => {
 
         <div className="flex flex-col items-center justify-center gap-8 pt-20 animate-fade-in">
           <h1 className="text-4xl font-bold mb-2 animate-slide-down">
-            Study Time Statistics
+          {userId ? `${name}'s Study Time Statistics` : "Study Time Statistics"}
           </h1>
 
           {loadingSubjects ? (
