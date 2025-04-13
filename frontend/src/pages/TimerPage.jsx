@@ -5,6 +5,7 @@ import { ArrowLeft, Plus, X } from "lucide-react";
 import Timer from "../components/Timer";
 import { useHomeworkStore } from "../store/useHomeworkStore";
 import HomeworkItem from "../components/subjectHomeworkItem";
+import GradeSection from "../components/GradeSection";
 
 const TimerPage = () => {
   const { subjectId } = useParams();
@@ -136,6 +137,9 @@ const TimerPage = () => {
                 )}
               </div>
             </div>
+            
+            {/* Add the GradeSection component */}
+            <GradeSection subjectId={subjectId} />
           </div>
         </div>
       </div>
