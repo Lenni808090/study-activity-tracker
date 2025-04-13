@@ -36,6 +36,11 @@ const UserSchema = new mongoose.Schema({
                 default: Date.now
             },
         }],
+
+        grades: {
+            written: [Number],
+            spoken: [Number]
+        },
     }],
 
     friends: [
