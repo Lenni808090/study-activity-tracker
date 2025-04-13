@@ -42,12 +42,29 @@ export const useSubjectStore = create((set) => ({
 
     createSubject: async (data) => {
         try {
-            const res = await axiosInstance.post("/subjects/createSubject", data);
+            const res = await axiosInstance.post("/subjects/createSubject", {
+                name: data.name,
+                color: data.color
+            });
             set({ subjects: res.data.subjects });
             toast.success(res.data.message);
         } catch (error) {
             toast.error(error.response.data.message);
         }
+    },
+
+    editSubject: async (data) => {
+      try {
+        const res = await axiosInstance.post("/subjects/editSubject", {
+          subjectId: data.subjectId,  // Add the subjectId to the request
+          name: data.name,
+          color: data.color
+        });
+        set({ subjects: res.data.subjects });
+        toast.success(res.data.message);
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Failed to edit subject");
+      }
     },
 
     deleteSubjects: async (data) => {

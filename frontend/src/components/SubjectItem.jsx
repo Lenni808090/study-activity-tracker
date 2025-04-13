@@ -11,10 +11,11 @@ const SubjectItem = ({ subject }) => {
   return (
     <div
       onClick={navigateToTimer}
-      className="flex items-center justify-between p-4 rounded-lg bg-base-100 shadow-md hover:shadow-lg cursor-pointer hover:bg-opacity-90 border border-primary/20 transition-all"
+      style={{ borderColor: subject.color }}
+      className="flex items-center justify-between p-4 rounded-lg bg-base-100 shadow-md hover:shadow-lg cursor-pointer hover:bg-opacity-90 border-2 transition-all"
     >
       <div className="flex items-start gap-3">
-        <BookOpen className="h-5 w-5 mt-1 text-primary" />
+        <BookOpen style={{ color: subject.color }} className="h-5 w-5 mt-1" />
         <div className="flex flex-col">
           <span className="font-semibold">{subject.name}</span>
           <span className="text-sm opacity-70">

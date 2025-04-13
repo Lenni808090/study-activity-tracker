@@ -22,6 +22,12 @@ const UserSchema = new mongoose.Schema({
             type: String,
             required: true
         },
+
+        color: { 
+            type: String, 
+            default: '#' + Math.floor(Math.random()*16777215).toString(16) 
+        },
+
         studyDuration:{
             type: Number,
             default: 0

@@ -2,10 +2,9 @@ import User from "../models/user.model.js";
 
 
 export const createSubject = async (req,res) => {
-    const name = req.body.name;
+    const { name, color } = req.body;
 
     try {
-
         const existingSubject = await User.findOne({
             "_id": req.user._id,
             "subjects.name": name
@@ -23,7 +22,8 @@ export const createSubject = async (req,res) => {
                 "$push": {
                     "subjects": {
                         "name": name,
-                        "studyDuration": 0
+                        "studyDuration": 0,
+                        "color": color
                     }
                 }
             },
@@ -35,14 +35,13 @@ export const createSubject = async (req,res) => {
             subjects: updateUser.subjects
         });
 
-
-    }catch (error) {
+    } catch (error) {
         console.error("Error in Create Subject Controller:", error.message);
         res.status(500).json({
             message: "Internal Server Error",
         });
     }
-}
+};
 
 export const deleteSubject = async (req,res) => {
     const { subjectId } = req.body;
@@ -75,7 +74,7 @@ export const deleteSubject = async (req,res) => {
             message: "Internal Server Error",
         });
     }
-}
+};
 
 
 export const getSubjects = async (req,res) => {
@@ -99,7 +98,7 @@ export const getSubjects = async (req,res) => {
             message: "Internal Server Error",
         });
     }
-}
+};
 
 export const updateStudyDuration = async (req,res) => {
     const { subjectId, duration } = req.body;
@@ -135,4 +134,41 @@ export const updateStudyDuration = async (req,res) => {
             message: "Internal Server Error",
         });
     }
-}
+};
+
+export const editSubject = async (req, res) => {
+    const { name, color, subjectId } = req.body;
+
+    try {
+        const updatedUser = await User.findOneAndUpdate(
+            {
+                "_id": req.user._id,
+                "subjects._id": subjectId
+            },
+            {
+                "$set": {
+                    "subjects.$.name": name,
+                    "subjects.$.color": color
+                }
+            },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: "User or Subject not found"
+            });
+        }
+
+        res.status(200).json({
+            message: "Subject updated successfully",
+            subjects: updatedUser.subjects
+        });
+
+    } catch (error) {
+        console.error("Error in Edit Subject Controller:", error.message);
+        res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }
+};
