@@ -19,6 +19,7 @@ export const useGradeStore = create((set, get) => ({
         try {
             const res = await axiosInstance.post("/grades/saveWrittenGrade", data);
             toast.success(res.data.message);
+            await get().getGrades(data.subjectId);
         } catch (error) {
             toast.error(error.response.data.message);
         }
@@ -26,7 +27,7 @@ export const useGradeStore = create((set, get) => ({
 
     getGrades: async (subjectId) => {
         try {
-            const res = await axiosInstance.post("/grades/getGrades", { subjectId });
+            const res = await axiosInstance.get(`/grades/getGrades/${ subjectId }`);
             set({ grades: res.data });
         } catch (error) {
             toast.error(error.response.data.message);

@@ -9,7 +9,6 @@ export const saveWrittenGrade = async (req, res) => {
             return res.status(400).json({ message: "Grade and subject ID are required" });
         }
 
-        // Add grade validation
         if (grade < 1 || grade > 6) {
             return res.status(400).json({ message: "Grade must be between 1 and 6" });
         }
@@ -34,7 +33,6 @@ export const saveWrittenGrade = async (req, res) => {
             return res.status(404).json({ message: "User or subject not found" });
         }
 
-
         res.status(200).json({ 
             message: "Written grade saved successfully",
         });
@@ -58,6 +56,10 @@ export const saveSpokenGrade = async (req,res) => {
             return res.status(400).json({ message: "Grade and subject ID are required" });
         }
 
+        if (grade < 1 || grade > 6) {
+            return res.status(400).json({ message: "Grade must be between 1 and 6" });
+        }
+
         const updatedUser = await User.findOneAndUpdate(
             { 
                 "_id": user._id,
@@ -67,6 +69,7 @@ export const saveSpokenGrade = async (req,res) => {
                 "$push": {
                     "subjects.$.grades.spoken": {
                         value: grade,
+                        date: new Date()  // Add date field here
                     }
                 }
             },
@@ -94,7 +97,7 @@ export const saveSpokenGrade = async (req,res) => {
 export const getGrades = async (req,res) => {
     try {
         const userId = req.user._id;
-        const { subjectId } = req.body;
+        const { subjectId } = req.params;
 
         if (!subjectId) {
             return res.status(400).json({ message: "Subject ID are required" });

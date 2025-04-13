@@ -38,8 +38,26 @@ const UserSchema = new mongoose.Schema({
         }],
 
         grades: {
-            written: [Number],
-            spoken: [Number]
+            written: [{
+                value: {
+                    type: Number,
+                    required: true
+                },
+                date: {
+                    type: Date,
+                    default: Date.now
+                }
+            }],
+            spoken: [{
+                value: {
+                    type: Number,
+                    required: true
+                },
+                date: {
+                    type: Date,
+                    default: Date.now
+                }
+            }]
         },
     }],
 
