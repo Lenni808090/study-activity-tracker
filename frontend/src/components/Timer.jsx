@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTimerStore } from "../store/useTimerStore";
 import { useSubjectStore } from "../store/useSubjectStore";
 import { Play, Square, RotateCcw, Check } from "lucide-react";
+import SubjectHomeworkSection from "./SubjectHomeworkSection";
 
 const formatTime = (ms) => {
   const seconds = Math.floor(ms / 1000);
@@ -61,37 +62,47 @@ const Timer = ({ subjectId }) => {
 };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-6 rounded-lg bg-base-200">
-      <div className="text-4xl font-mono font-bold">{displayTime}</div>
-      <div className="flex gap-2">
-        <button
-          className="btn btn-primary"
-          onClick={isRunning ? stopTimer : startTimer}
-        >
-          {isRunning ? (
-            <Square className="h-5 w-5" />
-          ) : (
-            <Play className="h-5 w-5" />
-          )}
-          {isRunning ? "Stop" : "Start"}
-        </button>
-        <button
-          className="btn btn-ghost"
-          onClick={resetTimer}
-          disabled={isRunning}
-        >
-          <RotateCcw className="h-5 w-5" />
-          Reset
-        </button>
+    <div className="container mx-auto px-4 space-y-8">
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="w-full lg:w-1/3">
+          <div className="flex flex-col items-center justify-center p-8 rounded-lg bg-base-200">
+            <div className="text-7xl font-mono font-bold mb-12">{displayTime}</div>
+            <div className="flex gap-4">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={isRunning ? stopTimer : startTimer}
+              >
+                {isRunning ? (
+                  <Square className="h-6 w-6" />
+                ) : (
+                  <Play className="h-6 w-6" />
+                )}
+                {isRunning ? "Stop" : "Start"}
+              </button>
+              <button
+                className="btn btn-ghost btn-lg"
+                onClick={resetTimer}
+                disabled={isRunning}
+              >
+                <RotateCcw className="h-6 w-6" />
+                Reset
+              </button>
+            </div>
+            <button
+              className="btn btn-success btn-lg mt-8"
+              onClick={handleFinish}
+              disabled={elapsedTime === 0}
+            >
+              <Check className="h-6 w-6" />
+              Finish
+            </button>
+          </div>
+        </div>
+
+        <div className="w-full lg:w-2/3">
+          <SubjectHomeworkSection subjectId={subjectId} />
+        </div>
       </div>
-      <button
-        className="btn btn-success mt-4"
-        onClick={handleFinish}
-        disabled={elapsedTime === 0}
-      >
-        <Check className="h-5 w-5" />
-        Finish
-      </button>
     </div>
   );
 };

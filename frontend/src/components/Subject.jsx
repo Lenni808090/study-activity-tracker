@@ -21,13 +21,13 @@ const Subject = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-2xl mx-auto">
+    <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
       <div className="flex justify-end items-center">
         <button 
           onClick={() => setShowForm(!showForm)} 
           className={`btn btn-circle btn-primary ${showForm ? 'rotate-45' : ''} transition-transform duration-300`}
         >
-          {showForm ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+          {showForm ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
         </button>
       </div>
       
@@ -35,32 +35,32 @@ const Subject = () => {
         <form onSubmit={handleCreateSubject} className="flex flex-col gap-4 pt-2">
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Subject Name</span>
+              <span className="label-text text-lg">Subject Name</span>
             </label>
             <input
               type="text"
               value={newSubjectName}
               onChange={(e) => setNewSubjectName(e.target.value)}
               placeholder="Enter subject name"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full text-lg py-6"
               required
             />
           </div>
           
-          <button type="submit" className="btn btn-primary mt-2">
+          <button type="submit" className="btn btn-primary mt-2 text-lg py-6">
             Add Subject
           </button>
         </form>
         <div className="divider"></div>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         {subjects.length > 0 ? (
           subjects.map((subject) => (
             <SubjectItem key={subject._id} subject={subject} />
           ))
         ) : (
-          <p className="text-center p-6 bg-base-200 rounded-lg opacity-70 text-lg">
+          <p className="text-center p-8 bg-base-200 rounded-lg opacity-70 text-xl">
             No subjects yet. Add your first subject!
           </p>
         )}

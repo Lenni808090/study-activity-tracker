@@ -54,7 +54,7 @@ const TimerPage = () => {
         <div className="flex flex-col items-center justify-center gap-8 pt-10">
           <h1 className="text-4xl font-bold">{subject.name}</h1>
 
-          <div className="w-full max-w-4xl">
+          <div className="w-full max-w-7xl">
             <Tabs defaultValue="timer" className="w-full">
               <TabsList className="w-full justify-center">
                 <TabsTrigger value="timer" className="flex-1">Timer</TabsTrigger>
@@ -62,9 +62,7 @@ const TimerPage = () => {
               </TabsList>
 
               <TabsContent value="timer" className="mt-6">
-                <div className="bg-base-200 p-6 rounded-xl shadow-md">
-                  <Timer subjectId={subjectId} />
-                </div>
+                <Timer subjectId={subjectId} />
               </TabsContent>
 
               <TabsContent value="grades" className="mt-6">

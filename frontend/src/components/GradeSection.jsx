@@ -29,20 +29,28 @@ const GradeSection = ({ subjectId }) => {
   const writtenGrades = grades.filter((g) => g.type === "written");
   const spokenGrades = grades.filter((g) => g.type === "spoken");
 
-  const calculateAverage = (grades, isWritten = false) => {
-    if (grades.length === 0) return "N/A";
-    const sum = grades.reduce((acc, grade) => acc + grade.value, 0);
-    return ((sum * (isWritten ? 2 : 1)) / (grades.length * (isWritten ? 2 : 1))).toFixed(2);
-  };
-
-  const writtenAverage = calculateAverage(writtenGrades, true);
-  const spokenAverage = calculateAverage(spokenGrades);
+  // Calculate averages
+    const calculateAverage = (grades = false) => {
+      if (grades.length === 0) return "N/A";
+      const sum = grades.reduce((acc, grade) => acc + grade.value, 0);
+      return (sum / grades.length).toFixed(2);
+    };
   
-  const totalAverage = grades.length > 0
-    ? (((writtenGrades.reduce((acc, g) => acc + g.value, 0) * 2) + 
-        spokenGrades.reduce((acc, g) => acc + g.value, 0)) / 
-        ((writtenGrades.length * 2) + spokenGrades.length)).toFixed(2)
-    : "N/A";
+    const writtenAverage = calculateAverage(writtenGrades);
+    const spokenAverage = calculateAverage(spokenGrades);
+    
+    const totalAverage = grades.length > 0
+      ? ((parseFloat(writtenAverage) * 2 + parseFloat(spokenAverage)) / 3).toFixed(2)
+      : "N/A";
+
+  const getGradeColor = (grade) => {
+    if (grade === "N/A") return "bg-base-100";
+    const numGrade = parseFloat(grade);
+    if (numGrade <= 2) return "bg-success text-success-content";
+    if (numGrade <= 3) return "bg-info text-info-content";
+    if (numGrade <= 4) return "bg-warning text-warning-content";
+    return "bg-error text-error-content";
+  };
 
   return (
     <div className="bg-base-200 p-6 rounded-xl shadow-md">
@@ -66,8 +74,8 @@ const GradeSection = ({ subjectId }) => {
           <h3 className="text-sm opacity-70 mb-1">Spoken Average</h3>
           <p className="text-2xl font-bold">{spokenAverage}</p>
         </div>
-        <div className="bg-base-100 p-4 rounded-lg">
-          <h3 className="text-sm opacity-70 mb-1">Total Average</h3>
+        <div className={`p-4 rounded-lg ${getGradeColor(totalAverage)}`}>
+          <h3 className="text-sm mb-1">Total Average</h3>
           <p className="text-2xl font-bold">{totalAverage}</p>
         </div>
       </div>
@@ -101,31 +109,58 @@ const GradeSection = ({ subjectId }) => {
         </form>
       )}
 
-      <div className="space-y-3">
-        {grades.length > 0 ? (
-          grades.map((grade, index) => (
-            <div
-              key={index}
-              className="flex justify-between items-center p-3 bg-base-100 rounded-lg"
-            >
-              <div>
-                <span className="font-medium">
-                  {grade.value.toFixed(1)}
-                </span>
-                <span className="ml-2 opacity-70 text-sm">
-                  ({grade.type})
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Written Grades Table */}
+        <div className="space-y-3">
+          <h3 className="font-semibold text-lg mb-4">Written Grades</h3>
+          {writtenGrades.length > 0 ? (
+            writtenGrades.map((grade, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center p-3 bg-base-100 rounded-lg"
+              >
+                <div>
+                  <span className="font-medium">
+                    {grade.value.toFixed(1)}
+                  </span>
+                </div>
+                <span className="text-sm opacity-70">
+                  {new Date(grade.date).toLocaleDateString()}
                 </span>
               </div>
-              <span className="text-sm opacity-70">
-                {new Date(grade.date).toLocaleDateString()}
-              </span>
-            </div>
-          ))
-        ) : (
-          <p className="text-center p-4 bg-base-100 rounded-lg opacity-70">
-            No grades yet. Add your first grade!
-          </p>
-        )}
+            ))
+          ) : (
+            <p className="text-center p-4 bg-base-100 rounded-lg opacity-70">
+              No written grades yet
+            </p>
+          )}
+        </div>
+
+        {/* Spoken Grades Table */}
+        <div className="space-y-3">
+          <h3 className="font-semibold text-lg mb-4">Spoken Grades</h3>
+          {spokenGrades.length > 0 ? (
+            spokenGrades.map((grade, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center p-3 bg-base-100 rounded-lg"
+              >
+                <div>
+                  <span className="font-medium">
+                    {grade.value.toFixed(1)}
+                  </span>
+                </div>
+                <span className="text-sm opacity-70">
+                  {new Date(grade.date).toLocaleDateString()}
+                </span>
+              </div>
+            ))
+          ) : (
+            <p className="text-center p-4 bg-base-100 rounded-lg opacity-70">
+              No spoken grades yet
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
