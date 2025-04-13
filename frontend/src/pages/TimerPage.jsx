@@ -5,23 +5,28 @@ import { ArrowLeft, Trash2, Edit2 } from "lucide-react";
 import Timer from "../components/Timer";
 import GradeSection from "../components/GradeSection";
 import { useGradeStore } from "../store/useGradeStore";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
-import { debounce } from 'lodash';
-import { useCallback } from 'react';
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "../components/ui/tabs";
+import { debounce } from "lodash";
+import { useCallback } from "react";
 
 const TimerPage = () => {
   const { subjectId } = useParams();
   const navigate = useNavigate();
-  const { subjects, getSubjects, deleteSubjects, editSubject } = useSubjectStore();
+  const { subjects, getSubjects, deleteSubjects, editSubject } =
+    useSubjectStore();
   const { getGrades } = useGradeStore();
   const [subject, setSubject] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: "",
-    color: ""
+    color: "",
   });
-  
-  
+
   const colorPickerRef = useRef(null);
 
   useEffect(() => {
@@ -42,26 +47,29 @@ const TimerPage = () => {
     if (subject) {
       setEditFormData({
         name: subject.name,
-        color: subject.color
+        color: subject.color,
       });
     }
   }, [subject]);
 
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this subject? This action cannot be undone.")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this subject? This action cannot be undone."
+      )
+    ) {
       await deleteSubjects({ subjectId });
       navigate("/");
     }
   };
 
-  
   const debouncedSetColor = useCallback(
     debounce((newColor) => {
       setEditFormData((prev) => ({ ...prev, color: newColor }));
     }, 300),
     []
   );
-  
+
   const handleColorChange = (e) => {
     const newColor = e.target.value;
     debouncedSetColor(newColor);
@@ -72,7 +80,7 @@ const TimerPage = () => {
     await editSubject({
       name: editFormData.name,
       color: editFormData.color,
-      subjectId: subject._id
+      subjectId: subject._id,
     });
     setShowEditForm(false);
     getSubjects();
@@ -102,17 +110,13 @@ const TimerPage = () => {
           <div className="flex gap-2">
             <button
               onClick={() => setShowEditForm(true)}
-              className="btn btn-primary gap-2"
+              className="btn btn-ghost p-2"
+              aria-label="Edit Subject"
             >
               <Edit2 className="h-5 w-5" />
-              Edit Subject
             </button>
-            <button
-              onClick={handleDelete}
-              className="btn btn-error gap-2"
-            >
+            <button onClick={handleDelete} className="btn btn-error gap-2">
               <Trash2 className="h-5 w-5" />
-              Delete Subject
             </button>
           </div>
         </div>
@@ -129,7 +133,9 @@ const TimerPage = () => {
                   <input
                     type="text"
                     value={editFormData.name}
-                    onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                    onChange={(e) =>
+                      setEditFormData({ ...editFormData, name: e.target.value })
+                    }
                     className="input input-bordered"
                     required
                   />
@@ -170,8 +176,12 @@ const TimerPage = () => {
           <div className="w-full max-w-7xl">
             <Tabs defaultValue="timer" className="w-full">
               <TabsList className="w-full justify-center">
-                <TabsTrigger value="timer" className="flex-1">Timer</TabsTrigger>
-                <TabsTrigger value="grades" className="flex-1">Grades</TabsTrigger>
+                <TabsTrigger value="timer" className="flex-1">
+                  Timer
+                </TabsTrigger>
+                <TabsTrigger value="grades" className="flex-1">
+                  Grades
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="timer" className="mt-6">

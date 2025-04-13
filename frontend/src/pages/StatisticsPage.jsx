@@ -42,14 +42,7 @@ const StatisticsPage = () => {
         data: subjects.map(
           (subject) => subject.studyDuration / (1000 * 60 * 60)
         ),
-        backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#9966FF",
-          "#FF9F40",
-        ],
+        backgroundColor: subjects.map((subject) => subject.color || "#4f46e5"),
         borderWidth: 1,
       },
     ],
@@ -105,12 +98,17 @@ const StatisticsPage = () => {
                     key={subject._id}
                     className="flex justify-between items-center p-4 bg-base-200 rounded-lg mb-2"
                   >
-                    <span>{subject.name}</span>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-4 h-4 rounded-full" 
+                        style={{ backgroundColor: subject.color || "#4f46e5" }}
+                      />
+                      <span>{subject.name}</span>
+                    </div>
                     <div className="text-right">
                       <div>{formatTime(subject.studyDuration)}</div>
                       <div className="text-sm opacity-70">
-                        {((subject.studyDuration / totalTime) * 100).toFixed(1)}
-                        %
+                        {((subject.studyDuration / totalTime) * 100).toFixed(1)}%
                       </div>
                     </div>
                   </div>
